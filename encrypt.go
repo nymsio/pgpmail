@@ -220,15 +220,15 @@ func writeEncryptedMimeBody(m *Message, encryptedBody []byte) error {
 	m.AddHeader(ctHeader, ct)
 	m.parseContentType()
 	m.mpContent = createEncryptedMultipart(boundary, encryptedBody)
-	if err := m.packMultiparts(); err != nil {
+	if err := m.PackMultiparts(); err != nil {
 		return errors.New("failed writing multipart/encrypted body: " + err.Error())
 	}
 	return nil
 }
 
-func createEncryptedMultipart(boundary string, encryptedBody []byte) *MultipartContent {
+func createEncryptedMultipart(boundary string, encryptedBody []byte) *multipartContent {
 	const preamble = "This is an OpenPGP/MIME encrypted message (RFC 4880 and 3156)\r\n"
-	mp := NewMultipartContent(boundary, preamble)
+	mp := newMultipartContent(boundary, preamble)
 	mp.addPart(createVersionMimePart())
 	mp.addPart(createEncryptedMimePart(encryptedBody))
 	return mp

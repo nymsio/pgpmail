@@ -14,7 +14,7 @@ func (m *Message) IsMultipart() bool {
 
 var malformed = errors.New("malformed mime body")
 
-type MultipartContent struct {
+type multipartContent struct {
 	preamble []byte
 	boundary []byte
 	parts    []*MessagePart
@@ -30,15 +30,15 @@ type extractState struct {
 
 var dashes = []byte("--")
 
-func NewMultipartContent(boundary, preamble string) *MultipartContent {
-	mp := new(MultipartContent)
+func newMultipartContent(boundary, preamble string) *multipartContent {
+	mp := new(multipartContent)
 	mp.preamble = []byte(preamble)
 	mp.boundary = []byte(boundary)
 	mp.parts = []*MessagePart{}
 	return mp
 }
 
-func (mp *MultipartContent) addPart(p *MessagePart) {
+func (mp *multipartContent) addPart(p *MessagePart) {
 	mp.parts = append(mp.parts, p)
 }
 
@@ -53,7 +53,7 @@ func (m *Message) extractMultiparts() error {
 	if err != nil {
 		return err
 	}
-	mp := NewMultipartContent(boundary, string(preamble))
+	mp := newMultipartContent(boundary, string(preamble))
 	for {
 		p, last, err := extractPart(&body, delim)
 		if err != nil {
@@ -73,7 +73,23 @@ func (m *Message) extractMultiparts() error {
 		}
 	}
 }
-func (m *Message) packMultiparts() error {
+
+func (m *Message) AddMultipart(p *MessagePart) {
+	if m.mpContent == nil {
+		boundary := randomBoundary()
+		m.mpContent = newMultipartContent(boundary, "")
+	}
+	m.mpContent.addPart(p)
+}
+
+func (m *Message) ClearMultiparts() {
+	if m.mpContent != nil {
+		m.mpContent.parts = nil
+		m.mpContent.preamble = nil
+	}
+}
+
+func (m *Message) PackMultiparts() error {
 	if m.mpContent == nil {
 		return errors.New("not a multipart message")
 	}
@@ -81,7 +97,7 @@ func (m *Message) packMultiparts() error {
 	return nil
 }
 
-func renderMultiparts(mp *MultipartContent) string {
+func renderMultiparts(mp *multipartContent) string {
 	b := new(bytes.Buffer)
 	b.Write(mp.preamble)
 	for _, part := range mp.parts {

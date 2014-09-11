@@ -9,7 +9,7 @@ func TestExtract(t *testing.T) {
 	td.Parts = []string{plainPart, htmlPart}
 	m := td.Message()
 	m.mpContent.parts[0].Body = insertCR("This is modified content.\n")
-	m.packMultiparts()
+	m.PackMultiparts()
 	if m.String() != testMultipartModified {
 		t.Error("modifed multipart message does not match expected output")
 	}

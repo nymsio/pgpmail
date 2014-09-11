@@ -104,10 +104,10 @@ func writeMimeSignatureMessage(m *Message, body *MessagePart, sig string) error 
 	ct := fmt.Sprintf("multipart/signed; boundary=%s; micalg=pgp-%s; protocol=\"application/pgp-signature\"", b, hashName(openpgpConfig.Hash()))
 	m.AddHeader(ctHeader, ct)
 	m.parseContentType()
-	m.mpContent = NewMultipartContent(b, "")
+	m.mpContent = newMultipartContent(b, "")
 	m.mpContent.addPart(body)
 	m.mpContent.addPart(createSignaturePart(sig))
-	if err := m.packMultiparts(); err != nil {
+	if err := m.PackMultiparts(); err != nil {
 		return errors.New("failed writing signature multipart: " + err.Error())
 	}
 	return nil

@@ -29,7 +29,7 @@ type Message struct {
 	ctPrimary   string
 	ctSecondary string
 	ctParams    map[string]string
-	mpContent   *MultipartContent
+	mpContent   *multipartContent
 }
 
 func ParseMessage(msg string) (*Message, error) {

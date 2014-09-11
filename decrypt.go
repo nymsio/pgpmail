@@ -161,7 +161,7 @@ func decryptInlineMessage(m *Message, keysrc KeySource, passphrase []byte) *Decr
 			}
 			part.Body = insertCR(string(bs))
 			part.rawContent = []byte(part.String())
-			m.packMultiparts()
+			m.PackMultiparts()
 			status.Message = m
 			return status
 		}

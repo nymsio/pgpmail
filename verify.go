@@ -154,7 +154,7 @@ func verifyInlineSignature(m *Message, keysrc KeySource) *VerifyStatus {
 			if plaintext != nil {
 				p.Body = string(plaintext)
 				p.rawContent = []byte(p.String())
-				m.packMultiparts()
+				m.PackMultiparts()
 				status.Message = m
 			}
 			return status
