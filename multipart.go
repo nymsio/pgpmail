@@ -14,10 +14,6 @@ func (m *Message) IsMultipart() bool {
 
 var malformed = errors.New("malformed mime body")
 
-type part struct {
-	content []byte
-}
-
 type multipartContent struct {
 	preamble []byte
 	boundary []byte
