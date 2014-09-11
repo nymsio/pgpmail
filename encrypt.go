@@ -226,7 +226,7 @@ func writeEncryptedMimeBody(m *Message, encryptedBody []byte) error {
 	return nil
 }
 
-func createEncryptedMultipart(boundary string, encryptedBody []byte) *multipartContent {
+func createEncryptedMultipart(boundary string, encryptedBody []byte) *MultipartContent {
 	const preamble = "This is an OpenPGP/MIME encrypted message (RFC 4880 and 3156)\r\n"
 	mp := NewMultipartContent(boundary, preamble)
 	mp.addPart(createVersionMimePart())
@@ -234,8 +234,8 @@ func createEncryptedMultipart(boundary string, encryptedBody []byte) *multipartC
 	return mp
 }
 
-func createVersionMimePart() *messagePart {
-	p := new(messagePart)
+func createVersionMimePart() *MessagePart {
+	p := new(MessagePart)
 	const contentType = "application/pgp-encrypted"
 	const description = "PGP/MIME version identification"
 	p.AddHeader(ctHeader, contentType)
@@ -244,8 +244,8 @@ func createVersionMimePart() *messagePart {
 	return p
 }
 
-func createEncryptedMimePart(encryptedBody []byte) *messagePart {
-	p := new(messagePart)
+func createEncryptedMimePart(encryptedBody []byte) *MessagePart {
+	p := new(MessagePart)
 	const contentType = "application/octet-stream; name=\"encrypted.asc\""
 	const description = "OpenPGP encrypted message"
 	const disposition = "inline; filename=\"encrypted.asc\""

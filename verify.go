@@ -163,7 +163,7 @@ func verifyInlineSignature(m *Message, keysrc KeySource) *VerifyStatus {
 	return new(VerifyStatus)
 }
 
-func isTextMimePart(part *messagePart) bool {
+func isTextMimePart(part *MessagePart) bool {
 	ct := part.GetHeaderValue(ctHeader)
 	if ct == "" {
 		return true

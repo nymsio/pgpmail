@@ -47,8 +47,8 @@ func (r *Reader) ReadMessage() (*Message, error) {
 	return m, nil
 }
 
-func (r *Reader) ReadMessagePart() (*messagePart, error) {
-	part := new(messagePart)
+func (r *Reader) ReadMessagePart() (*MessagePart, error) {
+	part := new(MessagePart)
 	if err := r.populatePart(part); err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (r *Reader) ReadMessagePart() (*messagePart, error) {
 	return part, nil
 }
 
-func (r *Reader) populatePart(part *messagePart) error {
+func (r *Reader) populatePart(part *MessagePart) error {
 	hs, err := r.ReadMIMEHeader()
 	if err != nil {
 		return err

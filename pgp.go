@@ -21,8 +21,8 @@ type KeySource interface {
 	GetSecretKeyRing() openpgp.EntityList
 }
 
-func createBodyMimePart(m *Message) *messagePart {
-	p := new(messagePart)
+func createBodyMimePart(m *Message) *MessagePart {
+	p := new(MessagePart)
 	p.Body = m.Body
 	moveHeader(m, p, ctHeader, "text/plain")
 	moveHeader(m, p, cteHeader, "")
@@ -30,7 +30,7 @@ func createBodyMimePart(m *Message) *messagePart {
 	return p
 }
 
-func moveHeader(from *Message, to *messagePart, name, defaultValue string) {
+func moveHeader(from *Message, to *MessagePart, name, defaultValue string) {
 	if h := from.RemoveHeader(name); h != "" {
 		to.AddHeader(name, h)
 	} else if defaultValue != "" {

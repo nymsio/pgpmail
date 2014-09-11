@@ -99,7 +99,7 @@ func hashName(hash crypto.Hash) string {
 	panic(fmt.Sprintf("unknown hash %v", hash))
 }
 
-func writeMimeSignatureMessage(m *Message, body *messagePart, sig string) error {
+func writeMimeSignatureMessage(m *Message, body *MessagePart, sig string) error {
 	b := randomBoundary()
 	ct := fmt.Sprintf("multipart/signed; boundary=%s; micalg=pgp-%s; protocol=\"application/pgp-signature\"", b, hashName(openpgpConfig.Hash()))
 	m.AddHeader(ctHeader, ct)
@@ -113,8 +113,8 @@ func writeMimeSignatureMessage(m *Message, body *messagePart, sig string) error 
 	return nil
 }
 
-func createSignaturePart(sig string) *messagePart {
-	p := new(messagePart)
+func createSignaturePart(sig string) *MessagePart {
+	p := new(MessagePart)
 	const contentType = "application/pgp-signature; name=\"signature.asc\""
 	const description = "OpenPGP digital signature"
 	const disposition = "attachment; filename=\"signature.asc\""

@@ -16,8 +16,8 @@ func (h Header) String() string {
 	return fmt.Sprintf("%s: %s", h.Name, h.Value)
 }
 
-// A messagePart represents either an entire message or a multipart section.
-type messagePart struct {
+// A MessagePart represents either an entire message or a multipart section.
+type MessagePart struct {
 	rawContent []byte
 	// HeaderList contains Header values in the order in which they appear in the message
 	HeaderList []*Header
@@ -25,18 +25,18 @@ type messagePart struct {
 }
 
 type Message struct {
-	messagePart
+	MessagePart
 	ctPrimary   string
 	ctSecondary string
 	ctParams    map[string]string
-	mpContent   *multipartContent
+	mpContent   *MultipartContent
 }
 
 func ParseMessage(msg string) (*Message, error) {
 	return NewReader(msg).ReadMessage()
 }
 
-func (m *messagePart) String() string {
+func (m *MessagePart) String() string {
 	b := new(bytes.Buffer)
 	for _, h := range m.HeaderList {
 		b.WriteString(h.String())
@@ -47,12 +47,12 @@ func (m *messagePart) String() string {
 	return b.String()
 }
 
-func (m *messagePart) AddHeader(name, value string) {
+func (m *MessagePart) AddHeader(name, value string) {
 	key := CanonicalMIMEHeaderKey(name)
 	m.HeaderList = append(m.HeaderList, &Header{key, value})
 }
 
-func (m *messagePart) SetHeader(name, value string) {
+func (m *MessagePart) SetHeader(name, value string) {
 	h := m.findFirstHeader(name)
 	if h == nil {
 		m.AddHeader(name, value)
@@ -63,7 +63,7 @@ func (m *messagePart) SetHeader(name, value string) {
 
 // RemoveHeader removes all headers matching name and returns Value of
 // the first one discovered.  Returns "" if no such header exists
-func (m *messagePart) RemoveHeader(name string) string {
+func (m *MessagePart) RemoveHeader(name string) string {
 	h := m.findFirstHeader(name)
 	if h == nil {
 		return ""
@@ -80,7 +80,7 @@ func (m *messagePart) RemoveHeader(name string) string {
 	return h.Value
 }
 
-func (m *messagePart) GetHeaderValue(name string) string {
+func (m *MessagePart) GetHeaderValue(name string) string {
 	h := m.findFirstHeader(name)
 	if h == nil {
 		return ""
@@ -88,7 +88,7 @@ func (m *messagePart) GetHeaderValue(name string) string {
 	return h.Value
 }
 
-func (m *messagePart) findFirstHeader(name string) *Header {
+func (m *MessagePart) findFirstHeader(name string) *Header {
 	key := CanonicalMIMEHeaderKey(name)
 	for _, h := range m.HeaderList {
 		if h.Name == key {
@@ -98,7 +98,7 @@ func (m *messagePart) findFirstHeader(name string) *Header {
 	return nil
 }
 
-func (m *messagePart) GetHeaders(name string) []string {
+func (m *MessagePart) GetHeaders(name string) []string {
 	key := CanonicalMIMEHeaderKey(name)
 	ret := []string{}
 	for _, h := range m.HeaderList {
