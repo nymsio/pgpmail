@@ -135,6 +135,9 @@ func encryptWith(m *Message, pubkeys openpgp.EntityList, signingEntity *openpgp.
 	if err != nil {
 		return createEncryptFailure("error encoding output message: " + err.Error())
 	}
+	if signingEntity.PrivateKey == nil {
+		return createEncryptFailure("signing key has no private key")
+	}
 	if signingEntity != nil && isSigningKeyLocked(signingEntity, passphrase) {
 		return &EncryptStatus{Code: StatusFailedPassphraseNeeded}
 	}
